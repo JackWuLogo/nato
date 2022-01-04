@@ -16,6 +16,3 @@ naries for programs and plugins
 /.envrc
 /.go
 /.idea/
-/vendor/
-/example/vendor/
-/proto-gen-rpc/vendor/
