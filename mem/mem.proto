@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package mem;
+option go_package = "micro-libs/mem";
+
+// 跨节点内存数据操作
+service Remote {
+  rpc Get(InMemGet) returns (OutMemGet);                    // 获取主键数据. 如果pk为空, 表示获取无外键的主键数据; 如果pk不为空, 表示获取有外键的主键数据
+  rpc GetFk(InMemGetFk) returns (OutMemGetFk);              // 获取所有外键数据
+  rpc Insert(InMemInsert) returns (MemNone);                // 写入新数据
+  rpc Delete(InMemDelete) returns (MemNone);                // 从数据库删除数据模型 (数据库立即删除). 如果pk为空, 表示删除无外键的主键数据; 如果pk不为空, 表示删除有外键的主键数据
+  rpc SetValue(InMemSetValue) returns (MemNone);            // 设置单个属性值. 如果pk为空, 表示设置无外键的主键数据; 如果pk不为空, 表示设置有外键的主键数据
+  rpc SetValues(InMemSetValues) returns (MemNone);          // 设置多个属性值. 如果pk为空, 表示设置无外键的主键数据; 如果pk不为空, 表示设置有外键的主键数据
+}
+
+// 无返回内容
+message MemNone {}
+
+// 获取指定主键数据
+message InMemGet {
+  string Table = 1;
+  repeated string Pk = 2;
+}
+message OutMemGet {
+  bytes Result = 1;
+}
+
+// 获取外键数据
+message InMemGetFk {
+  string Table = 1;
+  repeated string Pk = 2;
+}
+message OutMemGetFk {
+  map<string, bytes> Result = 1;
+}
+
+// 新增数据
+message InMemInsert {
+  string Table = 1;
+  bytes Data = 2;
+  repeated string Pk = 3;
+}
+
+// 删除数据
+message InMemDelete {
+  string Table = 1;
+  repeated string Pk = 2;
+}
+
+// 设置字段值
+message InMemSetValue {
+  string Table = 1;
+  repeated string Pk = 2;
+  string Field = 3;
+  bytes Value = 4;
+}
+
+// 批量设置字段值
+message InMemSetValues {
+  string Table = 1;
+  repeated string Pk = 2;
+  map<string, bytes> Values = 3;
+}

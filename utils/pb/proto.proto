@@ -1,0 +1,30 @@
+// 通用RPC服务
+syntax = "proto3";
+
+package pb;
+option go_package = "micro-libs/utils/pb";
+
+import "google/protobuf/any.proto";
+
+service Service {
+  rpc Call (Request) returns (Response);
+}
+
+// 请求内容
+message Request {
+  string Method = 1;
+  google.protobuf.Any Data = 2;
+}
+
+// 响应内容
+message Response {
+  uint32 Code = 1;
+  google.protobuf.Any Data = 2;
+  string Msg = 3;
+}
+
+// 停止服务
+message Cancel {
+  string Name = 1;                    // 服务名称
+  string NodeId = 2;                  // 服务节点ID
+}
